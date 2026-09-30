@@ -13,6 +13,13 @@ export default function Playbook() {
 
   const sections = [
     {
+      id: 0,
+      title: '0. Introduction',
+      tag: 'Introduction',
+      content: "This is the source of this content"
+      code: "Here is Link: "
+    },
+    {
       id: 1,
       title: '1. Project & Repository Structure',
       tag: 'GitHub / Source',

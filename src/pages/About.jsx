@@ -1,76 +1,75 @@
-import React from 'react'
-import { Server, Cpu, Globe, ArrowRight, Code } from 'lucide-react'
+import React, { useState } from 'react'
+import { Server, Code, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function About() {
   return (
     <div>
+      {/* Page Header */}
       <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: '800', marginBottom: '0.5rem' }}>
+        <h1 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.25rem)', fontWeight: '800', marginBottom: '0.5rem' }}>
           About This Project
         </h1>
-        <p style={{ color: 'var(--text-muted)' }}>
-          Static Single Page Application (SPA) architecture engineered for AWS cloud testing.
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+          Static Single Page Application (SPA) built for AWS cloud hosting tests and DevOps practice.
         </p>
       </div>
 
-      <div className="grid-2">
+      <div className="grid-2" style={{ marginTop: '0' }}>
         <div className="glass-card">
-          <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ff9900' }}>
-            <Server size={22} /> Deployment Modes
+          <h2 style={{ fontSize: '1.2rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#ff9900' }}>
+            <Server size={20} /> Deployment Options
           </h2>
-          <ul style={{ listStyle: 'none', display: 'flex', flexDrection: 'column', gap: '0.85rem', color: 'var(--text-muted)' }}>
-            <li style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <strong style={{ color: 'var(--text-main)', minWidth: '130px' }}>AWS EC2:</strong>
-              <span>Host the built <code>dist/</code> directory using Nginx, Apache, or Caddy web servers.</span>
-            </li>
-            <li style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <strong style={{ color: 'var(--text-main)', minWidth: '130px' }}>AWS S3 + CloudFront:</strong>
-              <span>Deploy to an S3 bucket with CloudFront CDN for edge distribution.</span>
-            </li>
-            <li style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-              <strong style={{ color: 'var(--text-main)', minWidth: '130px' }}>AWS Amplify:</strong>
-              <span>Connect directly to GitHub repo for continuous git push deployment.</span>
-            </li>
-          </ul>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.92rem' }}>
+            {[
+              { label: 'AWS EC2', desc: 'Host the dist/ directory using Nginx or Apache on an Ubuntu instance.' },
+              { label: 'S3 + CloudFront', desc: 'Upload to S3 bucket, distribute globally via CloudFront CDN.' },
+              { label: 'AWS Amplify', desc: 'Connect GitHub repo for zero-config continuous deployment.' },
+            ].map(({ label, desc }) => (
+              <div key={label} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                <strong style={{ color: 'var(--text-main)', minWidth: '100px', flexShrink: 0 }}>{label}:</strong>
+                <span>{desc}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="glass-card">
-          <h2 style={{ fontSize: '1.3rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)' }}>
-            <Code size={22} /> Tech Stack Specifications
+          <h2 style={{ fontSize: '1.2rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-cyan)' }}>
+            <Code size={20} /> Tech Stack
           </h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {['React 18', 'Vite 6', 'React Router v6', 'Lucide Icons', 'Vanilla CSS Custom Properties', 'Vite Env Ingestion'].map((tech, idx) => (
-              <span key={idx} style={{ background: 'rgba(255, 255, 255, 0.06)', border: '1px solid var(--border-color)', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '500' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem' }}>
+            {['React 18', 'Vite 6', 'React Router v6', 'Lucide Icons', 'Vanilla CSS', 'Vite Env Injection', 'GitHub Actions CI/CD', 'Nginx SPA Rewrite'].map((tech) => (
+              <span key={tech} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border-color)', padding: '0.35rem 0.8rem', borderRadius: '8px', fontSize: '0.83rem', fontWeight: '500' }}>
                 {tech}
               </span>
             ))}
           </div>
-          <div style={{ marginTop: '1.5rem' }}>
-            <Link to="/environment" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
-              View Environment Config <ArrowRight size={16} />
-            </Link>
-          </div>
+          <Link to="/environment" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
+            View Env Variables <ArrowRight size={15} />
+          </Link>
         </div>
       </div>
 
       <div className="glass-card" style={{ marginTop: '1.5rem' }}>
-        <h3 style={{ fontSize: '1.15rem', marginBottom: '0.75rem' }}>Nginx Router Configuration Example for AWS EC2</h3>
+        <h3 style={{ fontSize: '1.1rem', marginBottom: '0.75rem' }}>Nginx SPA Config for AWS EC2</h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1rem' }}>
-          When hosting React Router apps on EC2 with Nginx, ensure <code>try_files</code> redirects to <code>index.html</code> for static client-side routing:
+          Configure Nginx to serve the React SPA with client-side routing support:
         </p>
-        <pre className="code-block">
-{`server {
+        <pre className="code-block">{`server {
     listen 80;
     server_name _;
-    root /var/www/html/dist;
+    root /var/www/html;
     index index.html;
 
     location / {
         try_files $uri $uri/ /index.html;
     }
-}`}
-        </pre>
+}`}</pre>
+        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+          <code style={{ background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.65rem', borderRadius: '6px', fontSize: '0.82rem', color: 'var(--accent-cyan)' }}>sudo nginx -t</code>
+          <code style={{ background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.65rem', borderRadius: '6px', fontSize: '0.82rem', color: 'var(--accent-cyan)' }}>sudo systemctl reload nginx</code>
+        </div>
       </div>
     </div>
   )
