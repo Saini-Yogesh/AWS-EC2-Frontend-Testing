@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 
 import Home from './pages/Home'
+import Playbook from './pages/Playbook'
 import GithubExplorer from './pages/GithubExplorer'
 import WeatherDashboard from './pages/WeatherDashboard'
 import Environment from './pages/Environment'
@@ -33,6 +34,7 @@ export default function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/playbook" element={<Playbook />} />
           <Route path="/github" element={<GithubExplorer />} />
           <Route path="/weather" element={<WeatherDashboard />} />
           <Route path="/environment" element={<Environment />} />
