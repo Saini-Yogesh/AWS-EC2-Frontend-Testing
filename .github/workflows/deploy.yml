@@ -22,33 +22,34 @@ jobs:
           script: |
             set -e
 
-            echo "📍 Navigating to project directory on EC2..."
+            echo "📍 Navigating to project..."
             cd ~/AWS-EC2-Testing
 
-            echo "📥 Fetching latest code from main branch..."
+            echo "📥 Fetching latest code..."
             git fetch origin main
+
+            echo "🔄 Resetting to latest main..."
             git reset --hard origin/main
 
-            echo "🔑 Ensuring .env file exists..."
-            if [ ! -f .env ]; then
-              if [ -f .env.example ]; then
-                cp .env.example .env
-              else
-                touch .env
-              fi
-            fi
+            echo "📦 Installing dependencies..."
+            npm ci
 
-            echo "📦 Installing npm dependencies..."
-            npm install
-
-            echo "🏗️ Building React static application..."
+            echo "🏗️ Building React application..."
             npm run build
 
-            echo "🚀 Deploying dist folder to Nginx web root (/var/www/html)..."
+            echo "🔍 Checking build..."
+            if [ ! -d "dist" ]; then
+              echo "❌ dist folder was not created!"
+              exit 1
+            fi
+
+            echo "🚀 Deploying React application..."
+
             sudo rm -rf /var/www/html/*
-            sudo cp -r dist/* /var/www/html/
+            sudo cp -r dist/. /var/www/html/
 
-            echo "🔄 Reloading Nginx web server..."
-            sudo systemctl reload nginx || sudo systemctl restart nginx || true
+            echo "🔄 Reloading Nginx..."
+            sudo nginx -t
+            sudo systemctl reload nginx
 
-            echo "✅ Deployment completed successfully! Your changes are now live."
+            echo "✅ Deployment completed successfully!"
