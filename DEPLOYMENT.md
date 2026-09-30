@@ -9,24 +9,44 @@ This React static website is configured with **Vite**, **React Router v6**, and 
 The project includes an automated deployment workflow at [`.github/workflows/deploy.yml`](file:///c:/Users/yoges/Desktop/GitHub/AWS-EC2-Testing/.github/workflows/deploy.yml).
 
 ### How It Works:
-1. **Runner Build**: Compiles Vite assets (`npm run build`) in the GitHub Actions runner environment (saves EC2 RAM and CPU).
-2. **Env Ingestion**: Dynamically populates `.env` at build time from Repository Secrets.
-3. **Artifact Transport**: Uses `appleboy/scp-action` to securely transfer `dist/*` files to `/tmp/react-build` on EC2.
-4. **Live Release**: Moves static files to `/var/www/html/` and reloads Nginx.
+1. **GitHub Trigger**: Triggers automatically on push to `main`.
+2. **SSH Connection**: Connects to your EC2 instance via `appleboy/ssh-action@v1.2.2`.
+3. **Git Sync**: Pulls latest code directly into `~/AWS-EC2-Testing` on EC2 (`git fetch` & `git reset --hard origin/main`).
+4. **Vite Build**: Runs `npm install` and `npm run build` on EC2.
+5. **Live Update**: Copies `dist/*` into `/var/www/html/` and reloads Nginx (`sudo systemctl reload nginx`).
 
 ### Required GitHub Repository Secrets:
-Go to **Settings** -> **Secrets and variables** -> **Actions** in your GitHub repository and add:
+Go to **Settings** $\rightarrow$ **Secrets and variables** $\rightarrow$ **Actions** in your GitHub repository and add:
 
 | Secret Name | Value Example | Description |
 |---|---|---|
-| `EC2_HOST` | `54.210.12.88` or `ec2-xx.compute.amazonaws.com` | Public IP or Public DNS of your EC2 instance |
-| `EC2_USER` | `ubuntu` (or `ec2-user`) | Default SSH username for your OS image |
+| `EC2_HOST` | `54.210.12.88` or `ec2-xx.compute.amazonaws.com` | Public IPv4 Address or Public DNS of your EC2 instance |
+| `EC2_USER` | `ubuntu` (or `ec2-user`) | Default SSH username for your Linux AMI |
 | `EC2_SSH_KEY` | `-----BEGIN OPENSSH PRIVATE KEY-----...` | Private key (`.pem`) used to SSH into EC2 |
 
-*(Optional Secrets for Environment Variables)*:
-- `VITE_APP_TITLE` (e.g., `Production AWS Portal`)
-- `VITE_ENVIRONMENT` (e.g., `Production`)
-- `VITE_AWS_REGION` (e.g., `us-east-1`)
+---
+
+## ⚠️ Troubleshooting SSH `i/o timeout` Errors
+
+If your GitHub Action fails with:
+`dial tcp ***:22: i/o timeout`
+
+This means GitHub Actions cannot reach Port 22 on your EC2 instance. Follow these 3 steps to fix:
+
+### 1. Update AWS Security Group Inbound Rules
+1. Log in to **AWS EC2 Console**.
+2. Go to **Instances** $\rightarrow$ Click your instance $\rightarrow$ Click **Security** tab $\rightarrow$ Click the **Security Group**.
+3. Edit **Inbound Rules**:
+   - **Type**: `SSH`
+   - **Port**: `22`
+   - **Source**: `Anywhere-IPv4` (`0.0.0.0/0`)
+4. Save rules.
+
+### 2. Verify `EC2_HOST` Value
+Ensure `EC2_HOST` in GitHub Secrets is **only** the IP address (e.g. `54.210.12.88`), without `http://`, `https://`, `ssh://`, or trailing spaces.
+
+### 3. Check EC2 Public IP Status
+If your EC2 instance was stopped and restarted, AWS assigns a new IPv4 Public IP unless an **Elastic IP** is attached. Update `EC2_HOST` in GitHub Secrets if the IP changed.
 
 ---
 
