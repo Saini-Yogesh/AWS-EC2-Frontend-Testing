@@ -11,7 +11,7 @@ export default function Home() {
     <div>
       <section className="hero">
         <div className="hero-tag">
-          <Cloud size={16} /> AWS Static
+          <Cloud size={16} /> AWS Static Web Hosting Test App
         </div>
         <h1 className="hero-title">
           Multi-Route Static <span>React Portal</span>

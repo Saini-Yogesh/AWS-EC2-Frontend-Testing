@@ -50,6 +50,6 @@ jobs:
 
             echo "🔄 Reloading Nginx..."
             sudo nginx -t
-            sudo systemctl reload nginx
+              sudo systemctl reload nginx
 
             echo "✅ Deployment completed successfully!"
